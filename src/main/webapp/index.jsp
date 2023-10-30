@@ -9,7 +9,7 @@
     Calendar cal = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
     String time = sdf.format(cal.getTime());
-    String name = "Milankumar Khunt"; // Change this to your name
+    String name = "Milan Khunt"; // Change this to your name
 
     String greeting = "Welcome to COMP367";
 

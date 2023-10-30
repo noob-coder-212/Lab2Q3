@@ -1,10 +1,9 @@
 pipeline {
     agent any
 
-    options {
-        // Poll SCM to automatically trigger builds
-        pollSCM('*/10 * * * *') // Poll every 10 minutes
-    }
+   triggers {
+          pollSCM('*/10 * * * *') // Poll every 10 minutes
+      }
 
     stages {
         stage('Check for Changes') {

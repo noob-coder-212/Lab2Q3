@@ -5,10 +5,11 @@ pipeline {
         stage('Check for Changes') {
             steps {
                 script {
-                    def changeset = currentBuild.changeSets.find { it.branch == 'origin/main' }
-                    if (changeset) {
+                    def changeset = currentBuild.changeSets[0] // Assuming only one change set is needed
+
+                    if (changeset && changeset.target.matches('refs/heads/main')) {
                         echo "Changes detected in main branch. Triggering build."
-                    } else if (env.CHANGE_TARGET == 'master') {
+                    } else if (env.CHANGE_TARGET == 'main') {
                         echo "Merge request to main branch detected. Triggering build."
                     } else {
                         echo "No changes or merge requests detected. Skipping build."

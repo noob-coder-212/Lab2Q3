@@ -7,21 +7,28 @@ pipeline {
 
     stages {
         stage('Check for Changes') {
-            steps {
-                script {
-                    // Detect changes in the main branch
-                    def changeset = currentBuild.changeSets.find { it.branch == 'origin/master' }
-                    if (changeset) {
-                        echo "Changes detected in main branch. Triggering build."
-                        currentBuild.description = "Main branch changes detected"
-                    } else {
-                        echo "No changes detected. Skipping build."
-                        currentBuild.result = 'ABORTED'
-                        error("No changes detected.")
+                    steps {
+                        script {
+                            def changesetList = currentBuild.changeSets
+                            def changesDetected = false
+
+                            for (def changeset : changesetList) {
+                                if (changeset.items.any { it.branch == 'origin/main' }) {
+                                    changesDetected = true
+                                    break
+                                }
+                            }
+
+                            if (changesDetected) {
+                                echo "Changes detected in main branch. Triggering build."
+                            } else {
+                                echo "No changes detected. Skipping build."
+                                currentBuild.result = 'ABORTED'
+                                error("No changes detected.")
+                            }
+                        }
                     }
                 }
-            }
-        }
 
         stage('Build') {
             when {

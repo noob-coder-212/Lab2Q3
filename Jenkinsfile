@@ -8,7 +8,7 @@ pipeline {
                     def changeset = currentBuild.changeSets.find { it.branch == 'origin/main' }
                     if (changeset) {
                         echo "Changes detected in main branch. Triggering build."
-                    } else if (env.CHANGE_TARGET == 'main') {
+                    } else if (env.CHANGE_TARGET == 'master') {
                         echo "Merge request to main branch detected. Triggering build."
                     } else {
                         echo "No changes or merge requests detected. Skipping build."

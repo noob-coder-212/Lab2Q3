@@ -40,10 +40,6 @@ pipeline {
                 script {
                     // Authenticate with Docker Hub
 
-                    script {
-                        echo "Logging in to Docker Hub..."
-                        sh "docker login -u mercer212 -p Milan.212"
-                    }
 
                     withDockerServer([credentialsId: DOCKER_HUB_CREDENTIALS]) {
                         sh 'echo "Docker logged in."'

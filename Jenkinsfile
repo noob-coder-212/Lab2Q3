@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build Maven Project') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean package -D skipTests'
             }
         }
 
@@ -37,9 +37,8 @@ pipeline {
 
             }
             steps {
-                           sh 'docker tag myapp:v1.0 mercer212/myapp:v1.0'
-
-                        }
+                sh 'docker tag myapp:v1.0 mercer212/myapp:v1.0'
+            }
         }
 
         stage('Docker Login') {

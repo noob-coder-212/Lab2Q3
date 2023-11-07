@@ -33,7 +33,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t mercer212/devopslab2q3:v1.0 .'
+               sh 'docker build -t mercer212/lab3:latest .'
             }
         }
 
@@ -52,7 +52,7 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                sh 'docker push --verbose mercer212/devopslab2q3:v1.0'
+               sh 'docker push mercer212/lab3:latest'
             }
         }
     }

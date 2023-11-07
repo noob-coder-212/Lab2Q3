@@ -31,7 +31,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh 'sudo docker build -t devopslab2q3:v1.0 .'
+                sh 'docker build -t devopslab2q3:v1.0 .'
             }
         }
 
@@ -48,7 +48,7 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                sh 'sudo docker push devopslab2q3:v1.0'
+                sh 'docker push devopslab2q3:v1.0'
             }
         }
     }

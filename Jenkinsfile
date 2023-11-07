@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+                    // Define your Docker Hub credentials
+                    DOCKER_HUB_CREDENTIALS = credentials('docker-creds')
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,10 +20,7 @@ pipeline {
         }
 
         stage('Add Docker Hub Credentials') {
-            environment {
-                // Define your Docker Hub credentials
-                DOCKER_HUB_CREDENTIALS = credentials('my-docker-hub-credentials')
-            }
+
             steps {
                 script {
                     // Authenticate with Docker Hub

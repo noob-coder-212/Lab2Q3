@@ -3,7 +3,7 @@ pipeline {
 
     environment {
                     // Define your Docker Hub credentials
-                    DOCKER_HUB_CREDENTIALS = credentials('docker-creds')
+                    DOCKER_HUB_CREDENTIALS = credentials('docker-token')
     }
 
     stages {

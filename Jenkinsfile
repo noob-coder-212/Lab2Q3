@@ -33,8 +33,13 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-               sh 'docker build -t mercer212/lab3:latest .'
+               sh 'docker build -t myapp:1.0 .'
+
             }
+            steps {
+                           sh 'docker tag myapp:v1.0 mercer212/myapp:v1.0'
+
+                        }
         }
 
         stage('Docker Login') {
@@ -52,7 +57,7 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-               sh 'docker push mercer212/lab3:latest'
+               sh 'docker push mercer212/myapp:v1.0'
             }
         }
     }

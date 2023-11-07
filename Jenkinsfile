@@ -1,51 +1,64 @@
 pipeline {
     agent any
 
-   triggers {
-          pollSCM('*/5 * * * *') // Poll every 10 minutes
-      }
-
     stages {
-        stage('Check for Changes') {
-                    steps {
-                        script {
-                            def changesetList = currentBuild.changeSets
-                            def changesDetected = false
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
-                            for (def changeset : changesetList) {
-                                if (changeset.items.any { it.branch == 'origin/main' }) {
-                                    changesDetected = true
-                                    break
-                                }
-                            }
+        stage('Build Maven Project') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
 
-                            if (changesDetected) {
-                                echo "Changes detected in main branch. Triggering build."
-                            } else {
-                                echo "No changes detected. Skipping build."
-                                currentBuild.result = 'ABORTED'
-                                error("No changes detected.")
-                            }
-                        }
-                    }
-                }
-
-        stage('Build') {
-            when {
-                // Define when this stage should run
-                expression { currentBuild.description == "Main branch changes detected" }
+        stage('Add Docker Hub Credentials') {
+            environment {
+                // Define your Docker Hub credentials
+                DOCKER_HUB_CREDENTIALS = credentials('my-docker-hub-credentials')
             }
             steps {
                 script {
-                    script {
-                        def mavenHome = tool name: 'Maven', type: 'hudson.tasks.Maven$MavenInstallation'
-                            if (isUnix()) {
-                                sh "${mavenHome}/bin/mvn clean install"
-                                 } else {
-                                            bat "\"${mavenHome}\\bin\\mvn\" clean install"
-                                        }
-                                    }
-                    echo "Building for main branch"
+                    // Authenticate with Docker Hub
+                    withDockerServer([credentialsId: DOCKER_HUB_CREDENTIALS]) {
+                        sh 'echo "Docker Hub credentials added."'
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t devopslab2q3:v1.0 .'
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                script {
+                    // Authenticate with Docker Hub
+                    withDockerServer([credentialsId: DOCKER_HUB_CREDENTIALS]) {
+                        sh 'echo "Docker logged in."'
+                    }
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                sh 'docker push devopslab2q3:v1.0'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Cleanup: Log out from Docker
+            script {
+                withDockerServer([credentialsId: DOCKER_HUB_CREDENTIALS]) {
+                    sh 'docker logout'
                 }
             }
         }

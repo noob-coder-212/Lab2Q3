@@ -34,7 +34,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                sh 'docker build -t myapp:1.0 .'
-               sh 'docker tag myapp:v1.0 mercer212/myapp:v1.0'
+
             }
 
         }
@@ -47,6 +47,7 @@ pipeline {
 
                     withDockerServer([credentialsId: DOCKER_HUB_CREDENTIALS]) {
                         sh 'echo "Docker logged in."'
+                         sh 'docker tag myapp:v1.0 mercer212/myapp:v1.0'
                     }
                 }
             }
